@@ -3,6 +3,7 @@ package com.example.nbcamp_kakao
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.nbcamp_kakao.search.SearchFragment
 
 class MainViewPagerAdapter(
     fragmentActivity:FragmentActivity
