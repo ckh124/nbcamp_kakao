@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nbcamp_kakao.databinding.SearchItemBinding
-import kotlinx.coroutines.NonDisposableHandle.parent
+
 
 class SearchAdapter():ListAdapter<SearchModel,SearchAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<SearchModel>(){
         override fun areContentsTheSame(
             oldItem: SearchModel,
             newItem: SearchModel): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.image_url == newItem.image_url
         }
 
         override fun areItemsTheSame(
@@ -23,19 +23,27 @@ class SearchAdapter():ListAdapter<SearchModel,SearchAdapter.ViewHolder>(
         }
     }
 ) {
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
         return ViewHolder(
             SearchItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        TODO("Not yet implemented")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        var item = getItem(position)
+        holder.bind(item)
     }
+
+
 
     class ViewHolder(
         private val binding: SearchItemBinding
         ):RecyclerView.ViewHolder(binding.root){
+
+
+            fun bind(item: SearchModel) = with(binding){
+                searchText.text = item.sitename
+
+            }
 
 
     }

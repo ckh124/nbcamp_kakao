@@ -10,8 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.nbcamp_kakao.Repository
 import com.example.nbcamp_kakao.databinding.SearchFragmentBinding
-import com.example.nbcamp_kakao.viewmodel.SearchViewModel
-import com.example.nbcamp_kakao.viewmodel.SearchViewModelFactory
 
 class SearchFragment:Fragment() {
     private lateinit var viewModel : SearchViewModel
@@ -19,6 +17,9 @@ class SearchFragment:Fragment() {
     private val binding get() = _binding!!
     companion object{
         fun newInstance() = SearchFragment()
+    }
+    private val listAdapter by lazy{
+        SearchAdapter()
     }
 
     override fun onCreateView(
@@ -34,15 +35,18 @@ class SearchFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initViewModel()
     }
     private fun initView(){
         val repository = Repository()
         val viewModelFactory = SearchViewModelFactory(repository)
         viewModel = ViewModelProvider(this,viewModelFactory).get(SearchViewModel::class.java)
+        binding.searchRecycler.adapter = listAdapter
 
         binding.searchBtn.setOnClickListener{
-            viewModel.searchImage()
+            viewModel.searchImage(binding.searchEdittext.text.toString())
         }
+
         viewModel.myCustomPosts.observe(viewLifecycleOwner, Observer{result ->
             if(result.isSuccessful){
                 Log.d("test","$result")
@@ -54,6 +58,11 @@ class SearchFragment:Fragment() {
             }
         })
 
+    }
+    private fun initViewModel() = with(viewModel){
+        myCustomPosts.observe(viewLifecycleOwner){
+            listAdapter.submitList(myCustomPosts)
+        }
     }
 
 
